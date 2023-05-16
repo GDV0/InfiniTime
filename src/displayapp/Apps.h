@@ -26,6 +26,7 @@ namespace Pinetime {
       Motion,
       Steps,
       PassKey,
+	  Tennis,
       QuickSettings,
       Settings,
       SettingWatchFace,
@@ -37,7 +38,7 @@ namespace Pinetime {
       SettingChimes,
       SettingShakeThreshold,
       SettingBluetooth,
-      Error
+      Error,
     };
   }
 }
