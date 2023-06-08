@@ -26,7 +26,7 @@ namespace Pinetime {
       Motion,
       Steps,
       PassKey,
-	  Tennis,
+//	  Tennis,
       QuickSettings,
       Settings,
       SettingWatchFace,

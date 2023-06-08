@@ -52,7 +52,7 @@ namespace Pinetime {
           {"2", Apps::Twos},
           {Symbols::drum, Apps::Metronome},
           {Symbols::map, Apps::Navigation},
-		      {Symbols::tennis, Apps::Tennis},
+//		      {Symbols::tennis, Apps::Tennis},
 //          {Symbols::none, Apps::None},
           // {"M", Apps::Motion},
         }};
