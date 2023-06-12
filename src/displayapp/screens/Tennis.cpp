@@ -112,7 +112,7 @@ lv_obj_t *setB;
 lv_obj_t *imgBall;
 lv_obj_t *imgChgt;
 
-// Fanal score screen
+// Final score screen
 lv_style_t scoreT_st;
 lv_style_t scoreB_st;
 lv_style_t tiebreak_st;
@@ -162,7 +162,7 @@ Tennis::Tennis(Pinetime::Components::LittleVgl& lvgl, Controllers::Settings& set
 }  
 
 /**************************************************************************//**
-* Tennis class sectructor
+* Tennis class dectructor
 ******************************************************************************/
 Tennis::~Tennis() {
   lv_obj_clean(view);
