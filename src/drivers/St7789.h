@@ -2,6 +2,15 @@
 #include <cstddef>
 #include <cstdint>
 
+//#define DRIVER_DISPLAY_MIRROR
+
+enum Orientation : uint8_t {
+  Orientation_0   = 0x00, // MADCTL[MY=0,MX=0,MV=0]
+  Orientation_90  = 0x60, // MADCTL[MY=0,MX=1,MV=1]
+  Orientation_180 = 0xc0, // MADCTL[MY=1,MX=1,MV=0]
+  Orientation_270 = 0xa0, // MADCTL[MY=1,MX=0,MV=1]
+  };
+
 namespace Pinetime {
   namespace Drivers {
     class Spi;
@@ -23,6 +32,10 @@ namespace Pinetime {
 
       void DrawBuffer(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint8_t* data, size_t size);
 
+      
+      void SetOrientation(Orientation orientation);
+      Orientation GetOrientation();
+
       void Sleep();
       void Wakeup();
 
@@ -31,6 +44,7 @@ namespace Pinetime {
       uint8_t pinDataCommand;
       uint8_t pinReset;
       uint8_t verticalScrollingStartAddress = 0;
+      uint8_t madctlReg = Orientation_0;
 
       void HardwareReset();
       void SoftwareReset();
@@ -71,6 +85,7 @@ namespace Pinetime {
 
       static constexpr uint16_t Width = 240;
       static constexpr uint16_t Height = 320;
+//      static constexpr uint16_t Height = 240;
       void RowAddressSet();
     };
   }

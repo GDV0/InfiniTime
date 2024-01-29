@@ -25,6 +25,7 @@ void St7789::Init() {
   DisplayInversionOn();
 #endif
   NormalModeOn();
+
   SetVdv();
   DisplayOn();
 }
@@ -72,9 +73,9 @@ void St7789::MemoryDataAccessControl() {
   // [3] = RGB = RGB/BGR Order, 0 = RGB, 1 = BGR
   // [2] = MH = Display Data Latch Order, 0 = LCD refresh from left to right, 1 = Right to left
   // [0 .. 1] = Unused
-  WriteData(0b01000000);
+  WriteData(0b01100000);
 #else
-  WriteData(0x00);
+  WriteData(madctlReg);
 #endif
 }
 
@@ -164,6 +165,8 @@ void St7789::DrawPixel(uint16_t x, uint16_t y, uint32_t color) {
   if (x >= Width || y >= Height) {
     return;
   }
+  // row offset
+//  if (madctlReg == Orientation_180) y += (320 - 240);
 
   SetAddrWindow(x, y, x + 1, y + 1);
 
@@ -172,6 +175,9 @@ void St7789::DrawPixel(uint16_t x, uint16_t y, uint32_t color) {
 }
 
 void St7789::DrawBuffer(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint8_t* data, size_t size) {
+  // row offset
+//  if (madctlReg == Orientation_180) y += (320 - 240);
+
   SetAddrWindow(x, y, x + width - 1, y + height - 1);
   nrf_gpio_pin_set(pinDataCommand);
   WriteSpi(data, size);
@@ -195,4 +201,15 @@ void St7789::Wakeup() {
   VerticalScrollStartAddress(verticalScrollingStartAddress);
   DisplayOn();
   NRF_LOG_INFO("[LCD] Wakeup")
+}
+
+void St7789::SetOrientation(Orientation orientation) {
+  // clear and set (MY,MX,MV,ML bits on MADCTL register)
+  madctlReg &= ~0xf0;
+  madctlReg |= (uint8_t) orientation;
+  MemoryDataAccessControl();
+}
+
+Orientation St7789::GetOrientation() { 
+  return (Orientation) madctlReg; 
 }

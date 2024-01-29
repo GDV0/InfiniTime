@@ -18,13 +18,17 @@ namespace Pinetime {
         ~SettingDisplay() override;
 
         void UpdateSelected(lv_obj_t* object, lv_event_t event);
+        void UpdateOrientation(lv_obj_t* object, lv_event_t event);
 
       private:
         DisplayApp* app;
-        static constexpr std::array<uint16_t, 6> options = {5000, 7000, 10000, 15000, 20000, 30000};
-
+//        static constexpr std::array<uint16_t, 6> options = {5000, 7000, 10000, 15000, 20000, 30000};
+        static constexpr std::array<uint16_t, 4> options = {5000, 10000, 20000, 30000};
+        static constexpr std::array<char*, 2> options1 = {"L  ", "R  "};
+  
         Controllers::Settings& settingsController;
         lv_obj_t* cbOption[options.size()];
+        lv_obj_t* cbOption1[options1.size()];
       };
     }
   }

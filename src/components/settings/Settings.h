@@ -214,6 +214,17 @@ namespace Pinetime {
         return settings.screenTimeOut;
       };
 
+      void SetOrientation(uint32_t orientation) {
+        if (orientation != settings.orientation) {
+          settingsChanged = true;
+        }
+        settings.orientation = orientation;
+      };
+
+      uint32_t GetOrientation() const {
+        return settings.orientation;
+      };
+
       void SetShakeThreshold(uint16_t thresh) {
         if (settings.shakeWakeThreshold != thresh) {
           settings.shakeWakeThreshold = thresh;
@@ -291,8 +302,8 @@ namespace Pinetime {
       struct SettingsData {
         uint32_t version = settingsVersion;
         uint32_t stepsGoal = 10000;
-        uint32_t screenTimeOut = 15000;
-
+        uint32_t screenTimeOut = 10000;
+        uint8_t orientation = 0;
         ClockType clockType = ClockType::H24;
         WeatherFormat weatherFormat = WeatherFormat::Metric;
         Notification notificationStatus = Notification::On;

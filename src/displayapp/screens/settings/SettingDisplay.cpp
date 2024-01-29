@@ -13,9 +13,15 @@ namespace {
     auto* screen = static_cast<SettingDisplay*>(obj->user_data);
     screen->UpdateSelected(obj, event);
   }
+  
+  void event1_handler(lv_obj_t* obj, lv_event_t event) {
+    auto* screen = static_cast<SettingDisplay*>(obj->user_data);
+    screen->UpdateOrientation(obj, event);
+  }
 }
 
-constexpr std::array<uint16_t, 6> SettingDisplay::options;
+//GDVconstexpr std::array<uint16_t, 6> SettingDisplay::options;
+constexpr std::array<uint16_t, 4> SettingDisplay::options;
 
 SettingDisplay::SettingDisplay(Pinetime::Applications::DisplayApp* app, Pinetime::Controllers::Settings& settingsController)
   : app {app}, settingsController {settingsController} {
@@ -27,9 +33,9 @@ SettingDisplay::SettingDisplay(Pinetime::Applications::DisplayApp* app, Pinetime
   lv_obj_set_style_local_pad_inner(container1, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, 5);
   lv_obj_set_style_local_border_width(container1, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, 0);
 
-  lv_obj_set_pos(container1, 10, 60);
+  lv_obj_set_pos(container1, 10, 50);
   lv_obj_set_width(container1, LV_HOR_RES - 20);
-  lv_obj_set_height(container1, LV_VER_RES - 50);
+  lv_obj_set_height(container1, LV_VER_RES - 120);
   lv_cont_set_layout(container1, LV_LAYOUT_PRETTY_TOP);
 
   lv_obj_t* title = lv_label_create(lv_scr_act(), nullptr);
@@ -56,6 +62,35 @@ SettingDisplay::SettingDisplay(Pinetime::Applications::DisplayApp* app, Pinetime
       lv_checkbox_set_checked(cbOption[i], true);
     }
   }
+  // Add screen orientation
+  lv_obj_t* container2 = lv_cont_create(lv_scr_act(), nullptr);
+
+  lv_obj_set_style_local_bg_opa(container2, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, LV_OPA_TRANSP);
+  lv_obj_set_style_local_pad_all(container2, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, 10);
+  lv_obj_set_style_local_pad_inner(container2, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, 5);
+  lv_obj_set_style_local_border_width(container2, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, 0);
+
+  lv_obj_set_pos(container2, 10, 190);
+  lv_obj_set_width(container2, LV_HOR_RES - 20);
+  lv_obj_set_height(container2, LV_VER_RES - 120);
+  lv_cont_set_layout(container2, LV_LAYOUT_PRETTY_TOP);
+ 
+  lv_obj_t* title2 = lv_label_create(lv_scr_act(), nullptr);
+  lv_label_set_text_static(title2, "Button position");
+  lv_label_set_align(title2, LV_LABEL_ALIGN_CENTER);
+  lv_obj_align(title2, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 10, 160);
+  
+  for (uint8_t i = 0; i < options1.size(); i++) {
+    cbOption1[i] = lv_checkbox_create(container2, nullptr);
+    lv_checkbox_set_text(cbOption1[i], options1[i]);
+    cbOption1[i]->user_data = this;
+    lv_obj_set_event_cb(cbOption1[i], event1_handler);
+    SetRadioButtonStyle(cbOption1[i]);
+
+    if (settingsController.GetOrientation() == i) {
+      lv_checkbox_set_checked(cbOption1[i], true);
+    }
+  }
 }
 
 SettingDisplay::~SettingDisplay() {
@@ -71,6 +106,19 @@ void SettingDisplay::UpdateSelected(lv_obj_t* object, lv_event_t event) {
         settingsController.SetScreenTimeOut(options[i]);
       } else {
         lv_checkbox_set_checked(cbOption[i], false);
+      }
+    }
+  }
+}
+
+void SettingDisplay::UpdateOrientation(lv_obj_t* object, lv_event_t event) {
+  if (event == LV_EVENT_CLICKED) {
+    for (uint8_t i = 0; i < options1.size(); i++) {
+      if (object == cbOption1[i]) {
+        lv_checkbox_set_checked(cbOption1[i], true);
+        settingsController.SetOrientation(i);
+      } else {
+        lv_checkbox_set_checked(cbOption1[i], false);
       }
     }
   }
